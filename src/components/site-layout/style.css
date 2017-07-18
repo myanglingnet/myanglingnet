@@ -1,78 +1,57 @@
-body {
-  font-family: sans-serif;
-  background: #eee;
+* {
+  box-sizing: border-box;
+}
+html, body {    
+  background-color: #262626;
+  color: #262626;
+  font-family: 'Lato', sans-serif;
+  height: 100%;
+  line-height: 1.2em;
+  margin: 0;
+  overflow-x: hidden;
   padding: 0;
-  margin: 0;
-  color: #333;
+  width: 100%;
 }
-
 a {
-  color: #26a;
+  color: #262626;
+  outline: 0;
   text-decoration: none;
-  font-weight: 500;
+}
+li {
+  list-style: none;
 }
 
-a:hover {
-  text-decoration: underline;
+/* ---------------------------------------------------- */
+/* STRUCTURE
+/* ---------------------------------------------------- */
+#main-content {
+  bottom: 0;
+  padding-top: 62.5px;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
 
+
+/* ---------------------------------------------------- */
+/* HEADER
+/* ---------------------------------------------------- */
 header {
-  padding: 2em;
-  border-bottom: 1px solid #ccc;
-  background: #fff;
-  text-align: center;
+  background-color: #fff;
+  padding: 5px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 5;
 }
 
-nav.menu a {
-  display: inline-block;
-  padding: 0.5em 1em;
+/* ---------------------------------------------------- */
+/* LOGO
+/* ---------------------------------------------------- */
+.logo-small {
+  height: 50px;
+  width: auto;
 }
-
-img.logo {
-  width: 160px;
-  height: 88px;
-  margin-bottom: 1em;
-}
-
-h1 {
-  font-size: 2.5em;
-  font-weight: 300;
-  margin: 0;
-}
-
-h2 {
-  font-weight: 600;
-  margin-top: 1.5em;
-  margin-bottom: 0.5em;
-}
-
-h3 {
-  font-weight: 600;
-  margin-top: 1.5em;
-  margin-bottom: 0.5em;
-  font-size: 1em;
-}
-
-p {
-  line-height: 1.6;
-}
-
-.content {
-  padding: 1em 2em;
-  max-width: 30em;
-  margin: auto;
-}
-
-code {
-  color: #d03;
-  background-color: #f9f9f9;
-  padding: 0.1em 0.4em;
-  border: 1px solid #e5e5e5;
-  border-radius: 0.15em;
-  display: inline-block;
-}
-
-pre code {
-  display: block;
-  color: #396;
+.logo-med {
+  height: 65px; 
 }

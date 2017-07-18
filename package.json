@@ -1,10 +1,10 @@
 {
-  "name": "marko-starter-demo",
+  "name": "myanglingnet",
   "version": "1.0.9",
-  "description": "Demo of how to build an app using marko-starter",
+  "description": "Like Facebook...with fish",
   "repository": {
     "type": "git",
-    "url": "https://github.com/marko-js-samples/marko-starter-demo"
+    "url": "https://github.com/myanglingnet/MyAnglingNet"
   },
   "license": "MIT",
   "devDependencies": {
@@ -14,8 +14,22 @@
     "prettier": "^1.5.2"
   },
   "dependencies": {
+    "bcrypt-nodejs": "latest",
+    "body-parser": "~1.15.2",
+    "connect-flash": "~0.1.1",
+    "cookie-parser": "~1.4.3",
+    "express": "~4.14.0",
+    "express-session": "~1.14.1",
     "marko": "^4.2.4",
-    "marko-starter": "^1.0.0"
+    "marko-starter": "^1.0.0",
+    "method-override": "~2.3.6",
+    "mongoose": "~4.6.1",
+    "morgan": "~1.7.0",
+    "passport": "~0.3.2",
+    "passport-facebook": "~2.1.1",
+    "passport-google-oauth": "~1.0.0",
+    "passport-local": "~1.0.0",
+    "passport-twitter": "~1.0.4"
   },
   "scripts": {
     "start": "marko-starter server",
