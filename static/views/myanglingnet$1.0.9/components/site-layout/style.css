@@ -1,0 +1,57 @@
+* {
+  box-sizing: border-box;
+}
+html, body {    
+  background-color: #262626;
+  color: #262626;
+  font-family: 'Lato', sans-serif;
+  height: 100%;
+  line-height: 1.2em;
+  margin: 0;
+  overflow-x: hidden;
+  padding: 0;
+  width: 100%;
+}
+a {
+  color: #262626;
+  outline: 0;
+  text-decoration: none;
+}
+li {
+  list-style: none;
+}
+
+/* ---------------------------------------------------- */
+/* STRUCTURE
+/* ---------------------------------------------------- */
+#main-content {
+  bottom: 0;
+  padding-top: 62.5px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+
+/* ---------------------------------------------------- */
+/* HEADER
+/* ---------------------------------------------------- */
+header {
+  background-color: #fff;
+  padding: 5px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 5;
+}
+
+/* ---------------------------------------------------- */
+/* LOGO
+/* ---------------------------------------------------- */
+.logo-small {
+  height: 50px;
+  width: auto;
+}
+.logo-med {
+  height: 65px; 
+}

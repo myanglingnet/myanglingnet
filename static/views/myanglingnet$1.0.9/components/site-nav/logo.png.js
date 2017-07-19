@@ -1,0 +1,1 @@
+$_mod.def("/myanglingnet$1.0.9/components/site-nav/logo.png", {"url":"/static/myanglingnet$1.0.9/components/site-nav/logo.png","width":269,"height":257});

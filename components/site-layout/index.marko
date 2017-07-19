@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <base href="http://127.0.0.1:8080/">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title><include(input.title)/></title>
+        <link href='https://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet'>
+        <link rel="stylesheet" href="./fonts/css/font-awesome.min.css">
+        
+        <!-- CSS includes -->
+        <lasso-head/>
+    </head>
+    <body>
+        <header>
+            <site-nav/>
+        </header>
+
+        <section id="main-content">
+            <include(input.content)/>
+        </section>
+        
+        <!-- JS includes -->
+        <lasso-body/>
+    </body>
+</html>
