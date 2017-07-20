@@ -35,16 +35,50 @@ module.exports = class {
         map.setMapTypeId('styled_map');
 
         
-        map.addListener('click', function() {
-            addMarker();
+        map.addListener('click', function(e) {
+            addMarker(e);
         });
 
-        function addMarker() {
+        function addMarker(e) {
+            // Determine the location at the click position
+            var location = e.latLng;
+ 
+            // Create a marker and place it on the map
             var marker = new google.maps.Marker({
-                position: position,
-                map: map,
-                title: 'Click to zoom'
+                position: location,
+                map: map
             });
+ 
+            // AssignMarker a unique id
+            marker.id = uniqueId;
+            uniqueId++;
+ 
+            // Attach click event handler to the marker
+            google.maps.event.addListener(marker, "click", function (e) {
+                var content = 'Latitude: ' + location.lat() + '<br />Longitude: ' + location.lng();
+                content += "<br /><input type = 'button' value = 'Delete' onclick = 'DeleteMarker(" + marker.id + ");' value = 'Delete' />";
+                var infoWindow = new google.maps.InfoWindow({
+                    content: content
+                });
+                infoWindow.open(map, marker);
+            });
+ 
+            // Add marker to the array
+            markers.push(marker);
+        }
+
+        function DeleteMarker(id) {
+            // Find and remove the marker from the Array
+            for (var i = 0; i < markers.length; i++) {
+                if (markers[i].id == id) {
+                    // Remove the marker from Map                  
+                    markers[i].setMap(null);
+    
+                    // Remove the marker from array
+                    markers.splice(i, 1);
+                    return;
+                }
+            }
         }
     }
 }
