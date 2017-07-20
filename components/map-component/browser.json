@@ -1,0 +1,8 @@
+{
+    "dependencies": [
+        {
+            "type": "js",
+            "url": "https://maps.googleapis.com/maps/api/js?key=AIzaSyBwBvmQeqqQEllD6BZihVfLasxEx6b0kiQ"
+        }
+    ]
+}
