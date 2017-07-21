@@ -50,6 +50,7 @@ header {
 #form-div {
   background-color:#fff;
   margin: 25px auto 25px;
+  max-width: 600px;
   padding: 25px 0;
   text-align: center;
   width: 90%
