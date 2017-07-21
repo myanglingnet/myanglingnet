@@ -52,6 +52,8 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
             // Create a marker and place it on the map
             var marker = new google.maps.Marker({
                 position: location,
+                animation: google.maps.Animation.DROP,
+                icon: "../../static/logo.png",
                 map: map
             });
 

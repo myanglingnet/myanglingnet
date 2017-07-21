@@ -52,6 +52,8 @@ module.exports = {
             // Create a marker and place it on the map
             var marker = new google.maps.Marker({
                 position: location,
+                animation: google.maps.Animation.DROP,
+                icon: "../../static/logo.png",
                 map: map
             });
 
