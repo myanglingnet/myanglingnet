@@ -1,25 +1,6 @@
 <site-layout>
     <@title>MyAnglingNet</@title>
     <@content>
-        <div#profile-content>
-            <div class="page-header text-center">
-                <h1><span class="fa fa-anchor"></span> Profile Page</h1>
-                <a href="/logout" class="btn btn-default btn-sm">Logout</a>
-            </div>
-
-            <div class="row">
-                <!-- LOCAL INFORMATION -->
-                <div class="col-sm-6">
-                    <div class="well">
-                        <h3><span class="fa fa-user"></span> Local</h3>
-
-                        <p>
-                            <strong>id</strong>: ${data.user._id} <br>
-                            <strong>email</strong>: ${data.user.local.email}<br>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <profile-content user=data.user/>
     </@content>
 </site-layout>
