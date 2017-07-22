@@ -2,7 +2,6 @@ var indexTemplate = require('../views/index.marko');
 var loginTemplate = require('../views/login.marko');
 var signupTemplate = require('../views/signup.marko');
 var mapsTemplate = require('../views/maps.marko');
-var connectLocalTemplate = require('../views/connect-local.marko');
 var profileTemplate = require('../views/profile.marko');
 
 module.exports = function(app, passport) {
@@ -73,17 +72,15 @@ module.exports = function(app, passport) {
 
     // Map Functions =============================
     // process a new map entry
-    app.post('/signup', passport.authenticate('local-signup', {
-        successRedirect : '/profile', // redirect to the secure profile section
-        failureRedirect : '/signup', // redirect back to the signup page if there is an error
-        failureFlash : true // allow flash messages
-    }));
+    //app.post("/addMarker", {
+    //    
+    //});
 
 // =============================================================================
 // AUTHORIZE (ALREADY LOGGED IN / CONNECTING OTHER SOCIAL ACCOUNT) =============
 // =============================================================================
 
-    app.get('/connect/local', function(req, res) {
+    /*app.get('/connect/local', function(req, res) {
         res.marko(connectLocalTemplate, { 
             message: req.flash('loginMessage') 
         });
@@ -93,7 +90,7 @@ module.exports = function(app, passport) {
         successRedirect : '/profile', // redirect to the secure profile section
         failureRedirect : '/connect/local', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
-    }));
+    }));*/
 
 // =============================================================================
 // UNLINK ACCOUNTS =============================================================
@@ -102,14 +99,14 @@ module.exports = function(app, passport) {
 // for local account, remove email and password
 // user account will stay active in case they want to reconnect in the future
 
-    app.get('/unlink/local', isLoggedIn, function(req, res) {
+    /*app.get('/unlink/local', isLoggedIn, function(req, res) {
         var user            = req.user;
         user.local.email    = undefined;
         user.local.password = undefined;
         user.save(function(err) {
             res.redirect('/profile');
         });
-    });
+    });*/
 };
 
 // =============================================================================

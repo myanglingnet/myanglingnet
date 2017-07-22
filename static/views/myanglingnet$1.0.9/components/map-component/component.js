@@ -9,6 +9,7 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
     },
 
     onMount() {
+        var infowindow;
         var styledMapType = new google.maps.StyledMapType(
             [
                 {
@@ -44,16 +45,29 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
         var markers = this.state.markers;
         var uniqueId = this.state.uniqueId;
 
+        // Coordinates on mouse move
+        //google.maps.event.addListener(map, 'mousemove', function (event) {
+        //    displayCoordinates(event.latLng);               
+        //});
+
         // Add a Click handler to the Map
         map.addListener("click", function(e) {
             // Determine the location at the click position
             var location = e.latLng;
+            
+            // Marker icon
+            var markerIcon = {
+                url: "../../static/catch-pin.png",
+                scaledSize: new google.maps.Size(32, 45),
+                origin: new google.maps.Point(0,0),
+                anchor: new google.maps.Point(15, 45)
+            };
 
             // Create a marker and place it on the map
             var marker = new google.maps.Marker({
                 position: location,
                 animation: google.maps.Animation.DROP,
-                icon: "../../static/logo.png",
+                icon:markerIcon,
                 map: map
             });
 
@@ -61,15 +75,18 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
             marker.id = uniqueId;
             uniqueId++;
 
+            // Display current coordinates on hover
+            google.maps.event.addListener(marker, "mouseover", function (e) {
+                displayCoordinates(e.latLng, map, marker);
+            });
+
+            // Hide the infowindow when user leaves hover
+            marker.addListener('mouseout', function() {
+                infowindow.close();
+            });
+
             // Attach click event handler to the marker
-            google.maps.event.addListener(marker, "click", function (e) {
-                /*var content = "Latitude: " + location.lat() + "<br />Longitude: " + location.lng();
-                content += "<br /><input type = 'button' value = 'Delete' onclick = 'deleteMarker(" + marker.id + ");' value = 'Delete' />";
-                var infoWindow = new google.maps.InfoWindow({
-                    content: content
-                });
-                infoWindow.open(map, marker);*/
-                
+            google.maps.event.addListener(marker, "click", function (e) {    
                 // Find and remove the marker from the Array
                 for (var i = 0; i < markers.length; i++) {
                     if (markers[i].id == marker.id) {
@@ -100,49 +117,22 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
                 }
             }
         }
-    },
+ 
+        function displayCoordinates(coordinates, map, marker) {
+            var lat = coordinates.lat();
+            var lng = coordinates.lng();
 
-    addMarker(e, map) {
-        // Determine the location at the click position
-        var location = e.latLng;
+            lat = lat.toFixed(4);
+            lng = lng.toFixed(4);
 
-        // Create a marker and place it on the map
-        var marker = new google.maps.Marker({
-            position: location,
-            map: map
-        });
-
-        // Assign the Marker a unique id
-        marker.id = uniqueId;
-        uniqueId++;
-
-        // Attach click event handler to the marker
-        google.maps.event.addListener(marker, "click", function (e) {
-            var content = "Latitude: " + location.lat() + "<br />Longitude: " + location.lng();
-            content += "<br /><input type = 'button' value = 'Delete' onclick = 'deleteMarker(" + marker.id + ");' value = 'Delete' />";
-            var infoWindow = new google.maps.InfoWindow({
-                content: content
+            // Create an info window object
+            infowindow = new google.maps.InfoWindow({
+                content: "Latitude: " + lat + "  Longitude: " + lng
             });
-            infoWindow.open(map, marker);
-        });
 
-        // Add marker to the array
-        markers.push(marker);
-    }
-};
-
-/*  
-function deleteMarker(id) {
-    // Find and remove the marker from the Array
-    for (var i = 0; i < markers.length; i++) {
-        if (markers[i].id == id) {
-            // Remove the marker from Map                  
-            markers[i].setMap(null);
-
-            // Remove the marker from array
-            markers.splice(i, 1);
-            return;
+            // Display the info window 
+            infowindow.open(map, marker);
         }
-    }
-}*/
+    },
+};
 });
