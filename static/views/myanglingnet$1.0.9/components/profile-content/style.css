@@ -1,5 +1,11 @@
 #profile-content {
     background-color: #fff;
-    margin: 0 auto;
-    width: 75%;
+    margin: 40px auto;
+    width: 95%;
+}
+
+@media screen and (min-width: 768px) {
+    #profile-content {
+        width: 85%;
+    }
 }

@@ -1,11 +1,11 @@
 // load all the things we need
-var LocalStrategy    = require('passport-local').Strategy;
+var LocalStrategy = require('passport-local').Strategy;
 
 // load up the user model
-var User       = require('../models/user');
+var User = require('../models/user');
 
 // load the auth variables
-var configAuth = require('./auth'); // use this one for testing
+//var configAuth = require('./auth'); // use this one for testing
 
 module.exports = function(passport) {
 
@@ -59,7 +59,6 @@ module.exports = function(passport) {
                     return done(null, user);
             });
         });
-
     }));
 
     // =========================================================================

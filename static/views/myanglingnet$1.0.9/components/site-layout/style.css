@@ -95,13 +95,3 @@ header {
 .orange-text:hover {
   opacity: 0.8;
 }
-
-
-/* ---------------------------------------------------- */
-/* PROFILE
-/* ---------------------------------------------------- */
-#profile-content {
-    background-color: #fff;
-    margin: 0 auto;
-    width: 75%;
-}

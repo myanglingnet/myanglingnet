@@ -4,6 +4,9 @@ var signupTemplate = require('../views/signup.marko');
 var mapsTemplate = require('../views/maps.marko');
 var profileTemplate = require('../views/profile.marko');
 
+// load the map entry model
+var mapEntry = require('../models/mapEntry');
+
 module.exports = function(app, passport) {
     
 // =============================================================================
@@ -72,9 +75,9 @@ module.exports = function(app, passport) {
 
     // Map Functions =============================
     // process a new map entry
-    //app.post("/addMarker", {
-    //    
-    //});
+    app.post('/mapentry', function(req, res) {
+        console.log(req.body)
+    });
 
 // =============================================================================
 // AUTHORIZE (ALREADY LOGGED IN / CONNECTING OTHER SOCIAL ACCOUNT) =============

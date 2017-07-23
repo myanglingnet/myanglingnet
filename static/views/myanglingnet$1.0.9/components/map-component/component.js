@@ -102,6 +102,21 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
 
             // Add marker to the array
             markers.push(marker);
+
+            // Get the current lat/lng
+            var lat = e.latLng.lat();
+            var lng = e.latLng.lng();
+
+            lat = lat.toFixed(4);
+            lng = lng.toFixed(4);
+
+            // Update the 'invisible' textbox with marker JSON object
+            var json = document.getElementById("map-data")
+            json.value = "{ lat:" + lat + ",lng:" + lng + "}";
+
+            // Submit the 'invisible' form
+            var mapForm = document.getElementById("map-form");
+            mapForm.submit();
         });
 
         function deleteMarker(id) {
