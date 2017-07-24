@@ -3,7 +3,7 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
         this.state = {
             position: {lat: -25.363, lng: 131.044},
             markers: [],
-            uniqueId: 1,
+            mapEntryId: 1,
             zoom: 8,
         };
     },
@@ -43,20 +43,21 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
         map.setMapTypeId("styled_map");
         
         var markers = this.state.markers;
-        var uniqueId = this.state.uniqueId;
+        var mapEntryId = this.state.mapEntryId;
 
-        // Create a new GET request
-        var mapCoordinate;
-        var mapCoordinates;
+        // GET all map entries and add markers for each on the map
+        var mapEntryItem;
+        var mapEntryItems;
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.onreadystatechange = function() { 
             if (xmlHttp.readyState == 4) {// && xmlHttp.status == 200) {
-                mapCoordinates = JSON.parse(xmlHttp.responseText);
+                mapEntryItems = JSON.parse(xmlHttp.responseText);
 
-                for (i = 0; i < mapCoordinates.length; i++) {
-                    mapCoordinate = mapCoordinates[i];
-                    var myLatlng = {lat: + mapCoordinate.lat, lng: + mapCoordinate.lng};
-                    
+                for (i = 0; i < mapEntryItems.length; i++) {
+                    mapEntryItem = mapEntryItems[i];
+                    var myLatlng = {lat: + mapEntryItem.lat, lng: + mapEntryItem.lng};
+                    var infowindowCoordinates;
+console.log(mapEntryItem.mapEntryId);
                     // Marker icon
                     var markerIcon = {
                         url: "../../static/catch-pin.png",
@@ -72,9 +73,30 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
                         icon:markerIcon,
                         map: map
                     });
-                }
 
-                //callback(xmlHttp.responseText);
+                    // Display current coordinates on hover
+                    google.maps.event.addListener(marker, "mouseover", function (e) {
+                        //displayCoordinates(e.latLng, map, marker);
+                        var lat = e.latLng.lat();
+                        var lng = e.latLng.lng();
+
+                        lat = lat.toFixed(4);
+                        lng = lng.toFixed(4);
+
+                        // Create an info window object
+                        infowindowCoordinates = new google.maps.InfoWindow({
+                            content: "Latitude: " + lat + "  Longitude: " + lng
+                        });
+
+                        // Display the info window 
+                        infowindowCoordinates.open(map, marker);
+                    });
+                    
+                    // Hide the infowindow when user leaves hover
+                    marker.addListener("mouseout", function() {
+                        infowindowCoordinates.close();
+                    });
+                }
             }
         }
         xmlHttp.open("GET", "/mapentries", true);
@@ -102,14 +124,14 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
             });
 
             // Assign the Marker a unique id
-            marker.id = uniqueId;
-            uniqueId++;
+            marker.id = mapEntryId;
+            mapEntryId++;
 
             // Display current coordinates on hover
             google.maps.event.addListener(marker, "mouseover", function (e) {
                 displayCoordinates(e.latLng, map, marker);
             });
-
+            
             // Hide the infowindow when user leaves hover
             marker.addListener("mouseout", function() {
                 infowindow.close();
@@ -141,7 +163,7 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
             lat = lat.toFixed(6);
             lng = lng.toFixed(6);
 
-            var test = { lat, lng }
+            var postData = { lat, lng, mapEntryId }
 
             // Create a new POST request
             xhr = new XMLHttpRequest();
@@ -149,6 +171,7 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onload = function() {
                 console.log(xhr.status + ": " + xhr.responseText);
+
                 /*if (xhr.status === 200) {
                     alert(xhr.responseText);
                 }
@@ -156,7 +179,7 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
                     alert("Request failed and returned a status of " + xhr.status);
                 }*/
             };
-            xhr.send(JSON.stringify(test));
+            xhr.send(JSON.stringify(postData));
         });
 
         function deleteMarker(id) {

@@ -3,7 +3,7 @@ module.exports = {
         this.state = {
             position: {lat: -25.363, lng: 131.044},
             markers: [],
-            uniqueId: 1,
+            mapEntryId: 1,
             zoom: 8,
         };
     },
@@ -43,20 +43,20 @@ module.exports = {
         map.setMapTypeId("styled_map");
         
         var markers = this.state.markers;
-        var uniqueId = this.state.uniqueId;
+        var mapEntryId = this.state.mapEntryId;
 
         // GET all map entries and add markers for each on the map
-        var mapCoordinate;
-        var mapCoordinates;
+        var mapEntryItem;
+        var mapEntryItems;
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.onreadystatechange = function() { 
             if (xmlHttp.readyState == 4) {// && xmlHttp.status == 200) {
-                mapCoordinates = JSON.parse(xmlHttp.responseText);
+                mapEntryItems = JSON.parse(xmlHttp.responseText);
 
-                for (i = 0; i < mapCoordinates.length; i++) {
-                    mapCoordinate = mapCoordinates[i];
-                    var myLatlng = {lat: + mapCoordinate.lat, lng: + mapCoordinate.lng};
-                    
+                for (i = 0; i < mapEntryItems.length; i++) {
+                    mapEntryItem = mapEntryItems[i];
+                    var myLatlng = {lat: + mapEntryItem.lat, lng: + mapEntryItem.lng};
+console.log(mapEntryItem.mapEntryId);
                     // Marker icon
                     var markerIcon = {
                         url: "../../static/catch-pin.png",
@@ -71,6 +71,16 @@ module.exports = {
                         animation: google.maps.Animation.DROP,
                         icon:markerIcon,
                         map: map
+                    });
+
+                    // Display current coordinates on hover
+                    google.maps.event.addListener(marker, "mouseover", function (e) {
+                        displayCoordinates(e.latLng, map, marker);
+                    });
+                    
+                    // Hide the infowindow when user leaves hover
+                    marker.addListener("mouseout", function() {
+                        infowindow.close();
                     });
                 }
             }
@@ -100,14 +110,14 @@ module.exports = {
             });
 
             // Assign the Marker a unique id
-            marker.id = uniqueId;
-            uniqueId++;
+            marker.id = mapEntryId;
+            mapEntryId++;
 
             // Display current coordinates on hover
             google.maps.event.addListener(marker, "mouseover", function (e) {
                 displayCoordinates(e.latLng, map, marker);
             });
-
+            
             // Hide the infowindow when user leaves hover
             marker.addListener("mouseout", function() {
                 infowindow.close();
@@ -139,7 +149,7 @@ module.exports = {
             lat = lat.toFixed(6);
             lng = lng.toFixed(6);
 
-            var test = { lat, lng }
+            var postData = { lat, lng, mapEntryId }
 
             // Create a new POST request
             xhr = new XMLHttpRequest();
@@ -147,6 +157,7 @@ module.exports = {
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onload = function() {
                 console.log(xhr.status + ": " + xhr.responseText);
+
                 /*if (xhr.status === 200) {
                     alert(xhr.responseText);
                 }
@@ -154,7 +165,7 @@ module.exports = {
                     alert("Request failed and returned a status of " + xhr.status);
                 }*/
             };
-            xhr.send(JSON.stringify(test));
+            xhr.send(JSON.stringify(postData));
         });
 
         function deleteMarker(id) {

@@ -76,26 +76,27 @@ module.exports = function(app, passport) {
     // Map Functions =============================
     // process a new map entry
     app.post('/mapentry', function(req, res) {
-        var mapPin = new mapEntry({
+        var mapEntryItem = new mapEntry({
             lat: req.body.lat,
-            lng: req.body.lng
+            lng: req.body.lng,
+            mapEntryId: req.body.mapEntryId
         })
 
-        mapPin.save(function (err, mapPin) {
+        mapEntryItem.save(function (err, mapEntryItem) {
             if (err) { 
-                return next(err); 
+                return err; 
             }
-            res.status(201).json(mapPin);
+            res.status(201).json(mapEntryItem);
         })
     });
         
     // process a new map entry
     app.get('/mapentries', function(req, res) {
-        mapEntry.find(function(err, mapPins) {
+        mapEntry.find(function(err, mapEntryItems) {
             if (err) { 
-                return next(err) 
+                return err;
             }
-            res.status(201).json(mapPins);
+            res.status(201).json(mapEntryItems);
         })
     });
 

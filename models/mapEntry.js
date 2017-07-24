@@ -6,6 +6,9 @@ var mapEntrySchema = mongoose.Schema({
     userId: {
         type: String
     },
+    mapEntryId: {
+        type: Number
+    },
     fullAddress: {
         type: String
     },
