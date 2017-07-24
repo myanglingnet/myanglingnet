@@ -45,10 +45,40 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
         var markers = this.state.markers;
         var uniqueId = this.state.uniqueId;
 
-        // Coordinates on mouse move
-        //google.maps.event.addListener(map, 'mousemove', function (event) {
-        //    displayCoordinates(event.latLng);               
-        //});
+        // Create a new GET request
+        var mapCoordinate;
+        var mapCoordinates;
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() { 
+            if (xmlHttp.readyState == 4) {// && xmlHttp.status == 200) {
+                mapCoordinates = JSON.parse(xmlHttp.responseText);
+
+                for (i = 0; i < mapCoordinates.length; i++) {
+                    mapCoordinate = mapCoordinates[i];
+                    var myLatlng = {lat: + mapCoordinate.lat, lng: + mapCoordinate.lng};
+                    
+                    // Marker icon
+                    var markerIcon = {
+                        url: "../../static/catch-pin.png",
+                        scaledSize: new google.maps.Size(32, 45),
+                        origin: new google.maps.Point(0,0),
+                        anchor: new google.maps.Point(15, 45)
+                    };
+
+                    // Create a marker and place it on the map
+                    var marker = new google.maps.Marker({
+                        position: myLatlng,
+                        animation: google.maps.Animation.DROP,
+                        icon:markerIcon,
+                        map: map
+                    });
+                }
+
+                //callback(xmlHttp.responseText);
+            }
+        }
+        xmlHttp.open("GET", "/mapentries", true);
+        xmlHttp.send(null);
 
         // Add a Click handler to the Map
         map.addListener("click", function(e) {
@@ -81,7 +111,7 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
             });
 
             // Hide the infowindow when user leaves hover
-            marker.addListener('mouseout', function() {
+            marker.addListener("mouseout", function() {
                 infowindow.close();
             });
 
@@ -107,16 +137,26 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
             var lat = e.latLng.lat();
             var lng = e.latLng.lng();
 
-            lat = lat.toFixed(4);
-            lng = lng.toFixed(4);
+            // Restrict lat/lng values to 6dp
+            lat = lat.toFixed(6);
+            lng = lng.toFixed(6);
 
-            // Update the 'invisible' textbox with marker JSON object
-            var json = document.getElementById("map-data")
-            json.value = "{ lat:" + lat + ",lng:" + lng + "}";
+            var test = { lat, lng }
 
-            // Submit the 'invisible' form
-            var mapForm = document.getElementById("map-form");
-            mapForm.submit();
+            // Create a new POST request
+            xhr = new XMLHttpRequest();
+            xhr.open("POST", "/mapentry");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onload = function() {
+                console.log(xhr.status + ": " + xhr.responseText);
+                /*if (xhr.status === 200) {
+                    alert(xhr.responseText);
+                }
+                else {
+                    alert("Request failed and returned a status of " + xhr.status);
+                }*/
+            };
+            xhr.send(JSON.stringify(test));
         });
 
         function deleteMarker(id) {

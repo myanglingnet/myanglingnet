@@ -3,16 +3,25 @@ var mongoose = require('mongoose');
 
 // define the schema for our map entry model
 var mapEntrySchema = mongoose.Schema({
+    userId: {
+        type: String
+    },
     fullAddress: {
         type: String
     },
-    lat: {
+    /*lat: {
         type: Number,
         decimal: true
     },
     lng: {
         type: Number,
         decimal: true
+    },*/
+    lat: {
+        type: String
+    },
+    lng: {
+        type: String
     },
     geometry: {
         type: Object,
