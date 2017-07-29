@@ -1,4 +1,4 @@
-var indexTemplate = require('../views/index.marko');
+var feedTemplate = require('../views/feed.marko');
 var loginTemplate = require('../views/login.marko');
 var signupTemplate = require('../views/signup.marko');
 var mapsTemplate = require('../views/maps.marko');
@@ -13,9 +13,9 @@ module.exports = function(app, passport) {
 // NORMAL ROUTES ===============================================================
 // =============================================================================
 
-    // SHOW THE HOME PAGE ===========
+    // SHOW THE HOME PAGE =======================
     app.get('/', isLoggedIn, function(req, res) {
-        res.marko(indexTemplate);
+        res.redirect('/feed');
     });
 
     // PROFILE SECTION =================================
@@ -24,7 +24,14 @@ module.exports = function(app, passport) {
             user : req.user
         });
     });    
-    
+
+    // FEED SECTION ====================================
+    app.get('/feed', isLoggedIn, function(req, res) {
+        res.marko(feedTemplate, { 
+            user : req.user
+        });
+    });
+
     // MAPS SECTION =================================
     app.get('/maps', isLoggedIn, function(req, res) {
         res.marko(mapsTemplate, { 
@@ -53,7 +60,7 @@ module.exports = function(app, passport) {
 
     // process the login form
     app.post('/login', passport.authenticate('local-login', {
-        successRedirect : '/profile', // redirect to the secure profile section
+        successRedirect : '/', // redirect to the secure profile section
         failureRedirect : '/login', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));

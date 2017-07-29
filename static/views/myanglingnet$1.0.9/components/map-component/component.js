@@ -9,6 +9,15 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
     },
 
     onMount() {
+        // MODAL
+        var modal = document.getElementById("mapModal");
+        var span = document.getElementsByClassName("close")[0];
+        var modalText = document.getElementsByClassName("modal-text")[0];
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
         var infowindow;
         var styledMapType = new google.maps.StyledMapType(
             [
@@ -56,8 +65,7 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
                 for (i = 0; i < mapEntryItems.length; i++) {
                     mapEntryItem = mapEntryItems[i];
                     var myLatlng = {lat: + mapEntryItem.lat, lng: + mapEntryItem.lng};
-                    var infowindowCoordinates;
-console.log(mapEntryItem.mapEntryId);
+
                     // Marker icon
                     var markerIcon = {
                         url: "../../static/catch-pin.png",
@@ -77,24 +85,23 @@ console.log(mapEntryItem.mapEntryId);
                     // Display current coordinates on hover
                     google.maps.event.addListener(marker, "mouseover", function (e) {
                         //displayCoordinates(e.latLng, map, marker);
+                        
+                        /*modal.style.display = "block";*/
                         var lat = e.latLng.lat();
                         var lng = e.latLng.lng();
 
                         lat = lat.toFixed(4);
                         lng = lng.toFixed(4);
-
-                        // Create an info window object
-                        infowindowCoordinates = new google.maps.InfoWindow({
-                            content: "Latitude: " + lat + "  Longitude: " + lng
-                        });
-
-                        // Display the info window 
-                        infowindowCoordinates.open(map, marker);
+                        /*modalText.innerHTML = "Latitude: " + lat + "  Longitude: " + lng;*/
+                        var theModal = this.getComponent("theModal");
+                        theModal.setPosition(lat, lng);
+                        theModal.show();
                     });
                     
                     // Hide the infowindow when user leaves hover
                     marker.addListener("mouseout", function() {
-                        infowindowCoordinates.close();
+                        //infowindow.close();
+                        //modal.style.display = "none";
                     });
                 }
             }

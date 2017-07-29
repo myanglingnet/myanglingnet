@@ -21,5 +21,6 @@ $_mod.main("/marko$4.4.19/src/morphdom", "");
 $_mod.remap("/marko$4.4.19/src/components/helpers", "/marko$4.4.19/src/components/helpers-browser");
 $_mod.main("/marko$4.4.19/src/components", "");
 $_mod.remap("/marko$4.4.19/src/components/index", "/marko$4.4.19/src/components/index-browser");
+$_mod.main("/myanglingnet$1.0.9/components/modal-popup", "index.marko");
 $_mod.installed("myanglingnet$1.0.9", "marko-magic", "1.0.0");
 $_mod.remap("/marko-magic$1.0.0/components/asset-var/renderer", "/marko-magic$1.0.0/components/asset-var/renderer.browser");
