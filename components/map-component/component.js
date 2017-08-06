@@ -9,16 +9,10 @@ module.exports = {
     },
 
     onMount() {
-        // MODAL
-        var modal = document.getElementById("mapModal");
-        var span = document.getElementsByClassName("close")[0];
-        var modalText = document.getElementsByClassName("modal-text")[0];
+        // Get the modal component
+        var modal = this.getComponent("modal");
 
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        var infowindow;
+        // Map settings
         var styledMapType = new google.maps.StyledMapType(
             [
                 {
@@ -39,75 +33,125 @@ module.exports = {
                     ]
                 }
             ],
-            {name: "Styled Map"}
+            { name: "Styled Map" }
         )
         
+        // Create the map
         var map = new google.maps.Map(document.getElementById("map"), {
             zoom: this.state.zoom,
             center: this.state.position
         });
-        
+
         // Associate the styled map with the MapTypeId and set it to display
         map.mapTypes.set("styled_map", styledMapType);
         map.setMapTypeId("styled_map");
+
+        // Attach a click listener to the Map to record new markers
+        map.addListener("click", function(e) {
+            // Determine the location at the click position
+            var location = e.latLng;
+
+            // Get the current lat/lng
+            var lat = location.lat();
+            var lng = location.lng();
+
+            // Restrict lat/lng values to 6dp
+            lat = lat.toFixed(6);
+            lng = lng.toFixed(6);
+            
+            latlngPosition = {lat: + lat, lng: + lng};
+
+            AddMarker(latlngPosition, map);            
+            
+            var postData = { lat, lng, mapEntryId }
+
+            // Create a new POST request
+            xhr = new XMLHttpRequest();
+            xhr.open("POST", "/mapentry");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onload = function() {
+                console.log(xhr.status + ": " + xhr.responseText);
+
+                //if (xhr.status === 200) {
+                //    alert(xhr.responseText);
+                //}
+                //else {
+                //    alert("Request failed and returned a status of " + xhr.status);
+                //}
+            };
+            xhr.send(JSON.stringify(postData));
+        })
+
+        // Map items
+        var mapEntryItem;
+        var mapEntryItems;
         
+        // State variables
         var markers = this.state.markers;
         var mapEntryId = this.state.mapEntryId;
 
-        // GET all map entries and add markers for each on the map
-        var mapEntryItem;
-        var mapEntryItems;
+        // Lat/Lng position
+        var latlngPosition;
+
+        // Create HTTP request
         var xmlHttp = new XMLHttpRequest();
+
+        // Get Map items from the database
         xmlHttp.onreadystatechange = function() { 
-            if (xmlHttp.readyState == 4) {// && xmlHttp.status == 200) {
+            if (xmlHttp.readyState == 4) {
+                // Parse the JSON response from the HTTP response
                 mapEntryItems = JSON.parse(xmlHttp.responseText);
 
+                // Loop through the Map items
                 for (i = 0; i < mapEntryItems.length; i++) {
+                    // Get the lat/lng position of the Map item
                     mapEntryItem = mapEntryItems[i];
-                    var myLatlng = {lat: + mapEntryItem.lat, lng: + mapEntryItem.lng};
+                    latlngPosition = {lat: + mapEntryItem.lat, lng: + mapEntryItem.lng};
 
-                    // Marker icon
-                    var markerIcon = {
-                        url: "../../static/catch-pin.png",
-                        scaledSize: new google.maps.Size(32, 45),
-                        origin: new google.maps.Point(0,0),
-                        anchor: new google.maps.Point(15, 45)
-                    };
-
-                    // Create a marker and place it on the map
-                    var marker = new google.maps.Marker({
-                        position: myLatlng,
-                        animation: google.maps.Animation.DROP,
-                        icon:markerIcon,
-                        map: map
-                    });
-
-                    // Display current coordinates on hover
-                    google.maps.event.addListener(marker, "mouseover", function (e) {
-                        //displayCoordinates(e.latLng, map, marker);
-                        
-                        modal.style.display = "block";
-                        var lat = e.latLng.lat();
-                        var lng = e.latLng.lng();
-
-                        lat = lat.toFixed(4);
-                        lng = lng.toFixed(4);
-                        modalText.innerHTML = "Latitude: " + lat + "  Longitude: " + lng;
-                    });
-                    
-                    // Hide the infowindow when user leaves hover
-                    marker.addListener("mouseout", function() {
-                        //infowindow.close();
-                        modal.style.display = "none";
-                    });
+                    // Add a marker to indicate the Map item
+                    AddMarker(latlngPosition, map);
                 }
             }
         }
+
+        // Execute the HTTP Request
         xmlHttp.open("GET", "/mapentries", true);
         xmlHttp.send(null);
 
+        function AddMarker(latlngPosition, map) {
+            // Marker icon
+            var markerIcon = {
+                url: "../../static/catch-pin.png",
+                scaledSize: new google.maps.Size(40, 52),
+                origin: new google.maps.Point(0,0),
+                anchor: new google.maps.Point(20, 50)
+            };
+
+            // Create a marker and place it on the map
+            var marker = new google.maps.Marker({
+                position: latlngPosition,
+                animation: google.maps.Animation.DROP,
+                icon:markerIcon,
+                map: map
+            });
+            
+            // Display current coordinates on hover
+            google.maps.event.addListener(marker, "click", function (e) {
+                var lat = e.latLng.lat();
+                var lng = e.latLng.lng();
+
+                // Restrict lat/lng to 4dp precision
+                lat = lat.toFixed(4);
+                lng = lng.toFixed(4);
+
+                // Show the modal
+                modal.showModal();
+                modal.updateModalText("Latitude: " + lat + "  Longitude: " + lng);
+            });
+        }
+
         // Add a Click handler to the Map
-        map.addListener("click", function(e) {
+        /*map.addListener("click", function(e) {
             // Determine the location at the click position
             var location = e.latLng;
             
@@ -176,17 +220,17 @@ module.exports = {
             xhr.onload = function() {
                 console.log(xhr.status + ": " + xhr.responseText);
 
-                /*if (xhr.status === 200) {
-                    alert(xhr.responseText);
-                }
-                else {
-                    alert("Request failed and returned a status of " + xhr.status);
-                }*/
+                //if (xhr.status === 200) {
+                //    alert(xhr.responseText);
+                //}
+                //else {
+                //    alert("Request failed and returned a status of " + xhr.status);
+                //}
             };
             xhr.send(JSON.stringify(postData));
-        });
+        });*/
 
-        function deleteMarker(id) {
+        /*function deleteMarker(id) {
             // Find and remove the marker from the Array
             for (var i = 0; i < markers.length; i++) {
                 if (markers[i].id == id) {
@@ -214,6 +258,10 @@ module.exports = {
 
             // Display the info window 
             infowindow.open(map, marker);
-        }
+        }*/
     },
+
+    loadMarkers() {
+
+    }
 };
