@@ -1,10 +1,12 @@
-$_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(require, exports, module, __filename, __dirname) { module.exports = {
+$_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(require, exports, module, __filename, __dirname) { var map;
+
+module.exports = {
     onInput() {
         this.state = {
-            position: {lat: -25.363, lng: 131.044},
+            position: {lat: -39.5924556, lng: 176.8277294},
             markers: [],
             mapEntryId: 1,
-            zoom: 8,
+            zoom: 11,
         };
     },
 
@@ -35,12 +37,15 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
             ],
             { name: "Styled Map" }
         )
-        
+
         // Create the map
-        var map = new google.maps.Map(document.getElementById("map"), {
+        //var map = new google.maps.Map(document.getElementById("map"), {
+        map = new google.maps.Map(document.getElementById("map"), {
             zoom: this.state.zoom,
             center: this.state.position
         });
+        
+        modal.setMap(map);
 
         // Associate the styled map with the MapTypeId and set it to display
         map.mapTypes.set("styled_map", styledMapType);
@@ -56,13 +61,20 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
             var lng = location.lng();
 
             // Restrict lat/lng values to 6dp
-            lat = lat.toFixed(6);
-            lng = lng.toFixed(6);
+            lat = lat.toFixed(4);
+            lng = lng.toFixed(4);
             
+            // Show the modal
+            modal.showModal();
+            modal.updateModalText("Latitude: " + lat + "  Longitude: " + lng);
+
+            // Create lat/lng object
             latlngPosition = {lat: + lat, lng: + lng};
 
+            // Add a marker at the position
             AddMarker(latlngPosition, map);            
             
+            // Create post data for the request
             var postData = { lat, lng, mapEntryId }
 
             // Create a new POST request
@@ -70,8 +82,6 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
             xhr.open("POST", "/mapentry");
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onload = function() {
-                console.log(xhr.status + ": " + xhr.responseText);
-
                 //if (xhr.status === 200) {
                 //    alert(xhr.responseText);
                 //}
@@ -79,7 +89,7 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
                 //    alert("Request failed and returned a status of " + xhr.status);
                 //}
             };
-            xhr.send(JSON.stringify(postData));
+            xhr.send(JSON.stringify(postData));                        
         })
 
         // Map items
@@ -135,7 +145,7 @@ $_mod.def("/myanglingnet$1.0.9/components/map-component/component", function(req
                 map: map
             });
             
-            // Display current coordinates on hover
+            // Add a click listener to the marker
             google.maps.event.addListener(marker, "click", function (e) {
                 var lat = e.latLng.lat();
                 var lng = e.latLng.lng();

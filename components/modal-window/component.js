@@ -1,4 +1,9 @@
 module.exports = {
+    onInput() {
+        this.state = {
+            map: null
+        }
+    },
     onMount() {
         
     },
@@ -13,5 +18,11 @@ module.exports = {
     updateModalText(text) {
         var modalText = this.getEl("modal-text");
         modalText.innerHTML = text;
+    },
+    setMap(map) {
+        this.state.map = map;
+    },
+    addMapItem() {
+        this.emit("update");
     }
 }
