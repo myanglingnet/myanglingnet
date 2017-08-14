@@ -68,7 +68,7 @@ module.exports = {
             latlngPosition = {lat: + lat, lng: + lng};
 
             // Show the modal
-            modal.showModal(latlngPosition);
+            modal.showModal(latlngPosition, true);
             
             // Add a marker at the position
             //AddMarker(latlngPosition, map);            
@@ -149,7 +149,7 @@ module.exports = {
                 lng = lng.toFixed(4);
 
                 // Show the modal
-                modal.showModal();
+                modal.showModal(null, false);
                 modal.updateModalText("Latitude: " + lat + "  Longitude: " + lng);
             });
         }

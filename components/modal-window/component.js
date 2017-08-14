@@ -7,9 +7,16 @@ module.exports = {
     },
     
     // Show the modal       
-    showModal(latlngPosition) { 
+    showModal(latlngPosition, showButton) { 
+        var button = this.getEl("button");
         var modal = this.getEl("modal-window");
         modal.style.display = "block";
+
+        if (showButton) {
+            button.style.display = "block";
+        }else {
+            button.style.display = "none";
+        }
 
         // Set the lat/lng of the map marker
         this.state.latlngPosition = latlngPosition;
@@ -23,8 +30,8 @@ module.exports = {
     
     // Update modal text
     updateModalText(text) {
-        var modalText = this.getEl("modal-text");
-        modalText.innerHTML = text;
+        var modalText = this.getEl("position");
+        modalText.value = text;
     },
     
     // Link the map to the modal
@@ -66,8 +73,17 @@ module.exports = {
             var modal = document.getElementsByClassName("modal")[0];
             modal.style.display = "block";
 
-            var modalText = document.getElementsByClassName("modal-text")[0];
-            modalText.innerHTML = "lat: " + lat + "; lng: " + lng;
+            // Hide button
+            var button = this.getEl("button");
+            if (showButton) {
+                button.style.display = "block";
+            }else {
+                button.style.display = "none";
+            }
+
+            // Update marker values
+            var markerPosition = document.getElementsByClassName("position")[0];
+            markerPosition.value = "Latitude: " + lat + "  Longitude: " + lng;
         });
     }
 }

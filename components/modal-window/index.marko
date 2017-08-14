@@ -1,7 +1,8 @@
 <div.modal key="modal-window">
     <div.modal-content>
         <span.close key="modal-close" on-click("hideModal")>&times;</span>
-        <p.modal-text key="modal-text"></p>
-        <button on-click("addMapMarker")>Add Stuff</button>
+        
+        <input class="position" type="text" name="position" key="position" readonly>
+        <button key="button" on-click("addMapMarker")>Add Stuff</button>
     </div>
 </div>
